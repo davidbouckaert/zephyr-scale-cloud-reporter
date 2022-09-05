@@ -1,0 +1,29 @@
+{
+  "name": "@dbouckaert/zh",
+  "version": "1.2.0",
+  "description": "Zephyr Helpers: uploading test results to Zephyr.",
+  "main": "SRC/zephyrHelpers.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liantisit-art2/ZH.git"
+  },
+  "keywords": [
+    "ZEPHYR"
+  ],
+  "author": "David Bouckaert",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liantisit-art2/ZH/issues"
+  },
+  "homepage": "https://github.com/liantisit-art2/ZH#readme",
+  "dependencies": {
+    "chai": "^4.3.6",
+    "supertest": "^6.2.4"
+  },
+  "devDependencies": {
+    "@types/supertest": "^2.0.12"
+  }
+}
