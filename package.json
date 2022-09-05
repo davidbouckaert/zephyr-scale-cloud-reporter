@@ -1,7 +1,7 @@
 {
-  "name": "@dbouckaert/zh",
+  "name": "@dbouckaert/zephyr-scale-reporter",
   "version": "1.2.2",
-  "description": "Zephyr Helpers: uploading test results to Zephyr.",
+  "description": "Zephyr Helpers: upload test results to ZephyrScale after running automated tests.",
   "main": "SRC/zephyrHelpers.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/davidbouckaert/ZH"
   },
   "keywords": [
-    "ZEPHYR"
+    "ZEPHYR", "zapi", "test", "reporter", "zephyr scale", "jira", "mocha"
   ],
   "author": "David Bouckaert",
   "license": "MIT",
