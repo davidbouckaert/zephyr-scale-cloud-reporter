@@ -1,6 +1,6 @@
 {
   "name": "@dbouckaert/zh",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Zephyr Helpers: uploading test results to Zephyr.",
   "main": "SRC/zephyrHelpers.js",
   "scripts": {
@@ -16,9 +16,9 @@
   "author": "David Bouckaert",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/liantisit-art2/ZH/issues"
+    "url": "https://github.com/davidbouckaert/ZH/issues"
   },
-  "homepage": "https://github.com/liantisit-art2/ZH#readme",
+  "homepage": "https://github.com/davidbouckaert/ZH#readme",
   "dependencies": {
     "chai": "^4.3.6",
     "supertest": "^6.2.4"
