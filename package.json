@@ -1,6 +1,6 @@
 {
   "name": "@dbouckaert/zephyr-scale-reporter",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Zephyr Helpers: upload test results to ZephyrScale after running automated tests.",
   "main": "SRC/zephyrHelpers.js",
   "scripts": {
