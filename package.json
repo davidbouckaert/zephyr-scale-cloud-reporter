@@ -1,6 +1,6 @@
 {
   "name": "@dbouckaert/zh",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Zephyr Helpers: uploading test results to Zephyr.",
   "main": "SRC/zephyrHelpers.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liantisit-art2/ZH.git"
+    "url": "git+https://github.com/davidbouckaert/ZH"
   },
   "keywords": [
     "ZEPHYR"
