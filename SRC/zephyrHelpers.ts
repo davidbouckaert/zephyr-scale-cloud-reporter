@@ -403,6 +403,21 @@ export const softAssert: SoftAssert = {
     }
     return assertPassed;
   },
+  isOneOf(arr:[], value:any): boolean {
+    let assertPassed = false
+    if (!value) {
+      console.log('ERROR [isOneOf] please pass an argument');
+      process.exit(1);
+    }
+    try{
+      expect(value).to.be.oneOf(arr)
+      assertPassed = true
+    }
+    catch(error:any){
+      this.failedAsserts.push(error);
+    }
+    return assertPassed
+  },
   /**
    * Use this function at the end of a test to check if any of the soft-asserts failed.
    * Thow an assert.fail if any errors were captured.

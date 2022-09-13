@@ -8,4 +8,5 @@ export interface SoftAssert {
   isEmptyObject: any;
   hasLength: any;
   assertAll: any;
+  isOneOf: any;
 }

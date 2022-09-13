@@ -1,7 +1,7 @@
 {
-  "name": "@dbouckaert/zh",
-  "version": "1.1.14",
-  "description": "Zephyr Helpers: uploading test results to Zephyr.",
+  "name": "@dbouckaert/zephyr-scale-reporter",
+  "version": "1.1.0",
+  "description": "ZH, or zephyr helpers is a Node JS framework that implements test suites with Zephyr scale for Jira. It uses a soft-assert function to absorb failing assertions and translate them to a true/false value.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -13,17 +13,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liantisit-art2/ZH.git"
+    "url": "git+https://github.com/davidbouckaert/ZH"
   },
   "keywords": [
-    "ZEPHYR"
+    "ZEPHYR", "zapi", "test", "reporter", "zephyr scale", "jira", "mocha"
   ],
   "author": "David Bouckaert",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/liantisit-art2/ZH/issues"
+    "url": "https://github.com/davidbouckaert/ZH/issues"
   },
-  "homepage": "https://github.com/liantisit-art2/ZH#readme",
+  "homepage": "https://github.com/davidbouckaert/ZH#readme",
   "dependencies": {
     "@types/chai": "^4.3.3",
     "awesome-typescript-loader": "^5.2.1",
