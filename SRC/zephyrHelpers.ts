@@ -277,8 +277,9 @@ export const softAssert: SoftAssert = {
     try {
       expect(value).equal(condition);
       assertPassed = true;
-    } catch (error: any) {
-      this.failedAsserts.push(error);
+    } catch (error) {
+      const e:any = error
+      this.failedAsserts.push(e);
     }
     return assertPassed;
   },
@@ -295,15 +296,17 @@ export const softAssert: SoftAssert = {
       try {
         expect(sample).include.members(pattern);
         assertPassed = true;
-      } catch (error: any) {
-        this.failedAsserts.push(error);
+      } catch (error) {
+        const e:any = error
+        this.failedAsserts.push(e);
       }
     } else {
       try {
         expect(sample).deep.include(pattern);
         assertPassed = true;
-      } catch (error: any) {
-        this.failedAsserts.push(error);
+      } catch (error) {
+        const e:any = error
+        this.failedAsserts.push(e);
       }
     }
     return assertPassed;
@@ -313,8 +316,9 @@ export const softAssert: SoftAssert = {
     try {
       expect(value).equal(undefined);
       assertPassed = true;
-    } catch (error: any) {
-      this.failedAsserts.push(error);
+    } catch (error) {
+      const e:any = error
+      this.failedAsserts.push(e);
     }
     return assertPassed;
   },
@@ -324,8 +328,9 @@ export const softAssert: SoftAssert = {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(value).to.be.null;
       assertPassed = true;
-    } catch (error: any) {
-      this.failedAsserts.push(error);
+    } catch (error) {
+      const e:any = error
+      this.failedAsserts.push(e);
     }
     return assertPassed;
   },
@@ -357,8 +362,9 @@ export const softAssert: SoftAssert = {
     try {
       expect(obj).to.have.all.keys(arrayWithKeys);
       assertPassed = true;
-    } catch (error: any) {
-      this.failedAsserts.push(error);
+    } catch (error) {
+      const e:any = error
+      this.failedAsserts.push(e);
       assertPassed = false;
     }
     return assertPassed;
@@ -371,8 +377,9 @@ export const softAssert: SoftAssert = {
     try {
       expect(Object.keys(obj)).lengthOf(0);
       assertPassed = true;
-    } catch (error: any) {
-      this.failedAsserts.push(error);
+    } catch (error) {
+      const e:any = error
+      this.failedAsserts.push(e);
     }
     return assertPassed;
   },
@@ -389,15 +396,17 @@ export const softAssert: SoftAssert = {
       try {
         expect(value).not.be.empty;
         assertPassed = true;
-      } catch (error: any) {
-        this.failedAsserts.push(error);
+      } catch (error) {
+        const e:any = error
+        this.failedAsserts.push(e);
       }
     }
     if (typeof value === 'number') {
       try {
         expect(value).not.be.null;
-      } catch (error: any) {
-        this.failedAsserts.push(error);
+      } catch (error) {
+        const e:any = error
+        this.failedAsserts.push(e);
         assertPassed = false;
       }
     }
@@ -413,8 +422,9 @@ export const softAssert: SoftAssert = {
       expect(value).to.be.oneOf(arr)
       assertPassed = true
     }
-    catch(error:any){
-      this.failedAsserts.push(error);
+    catch(error){
+      const e:any = error
+      this.failedAsserts.push(e);
     }
     return assertPassed
   },
@@ -430,17 +440,3 @@ export const softAssert: SoftAssert = {
     }
   },
 };
-
-// module.exports = {
-//   getProjectsId,
-//   getAllTestcases,
-//   filterTestcase,
-//   createTestResult,
-//   updateTestResult,
-//   createNewTestrun,
-//   init,
-//   getEnvironmentId,
-//   getJiraUser,
-//   getJiraUserId,
-//   softAssert,
-// };
