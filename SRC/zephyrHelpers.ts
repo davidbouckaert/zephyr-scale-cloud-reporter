@@ -74,8 +74,12 @@ const getJiraUser = async (
  * @param {ZephyrConfig} zephyrConfig
  */
 const getJiraUserId = async (zephyrConfig: ZephyrConfig): Promise<string> => {
+  if(process.env.jiraUser === 'Jenkins'){
+    return zephyrConfig.defaultJiraId
+  } else {
   const jiraUsersResponse: Response<JiraUser> = await getJiraUser(zephyrConfig);
   return jiraUsersResponse.body.key;
+  }
 };
 
 const getEnvironments = async (
