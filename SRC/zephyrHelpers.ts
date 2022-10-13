@@ -287,6 +287,38 @@ export const softAssert: SoftAssert = {
     }
     return assertPassed;
   },
+  notEquals(value:any, condition:any):boolean {
+        if (!value || !condition) {
+            console.log('ERROR [includes] please provide the value and condition arguments');
+            process.exit(1);
+        }
+        let assertPassed = false;
+        try {
+            (0, chai_1.expect)(value).not.equal(condition);
+            assertPassed = true;
+        }
+        catch (error) {
+            const e:any = error;
+            this.failedAsserts.push(e);
+        }
+        return assertPassed;
+    },
+    deepEquals(value:any, condition:any):boolean {
+        if (!value || !condition) {
+            console.log('ERROR [includes] please provide the value and condition arguments');
+            process.exit(1);
+        }
+        let assertPassed = false;
+        try {
+            (0, chai_1.expect)(value).deep.equal(condition);
+            assertPassed = true;
+        }
+        catch (error) {
+            const e:any = error;
+            this.failedAsserts.push(e);
+        }
+        return assertPassed;
+    },
   includes(sample: any, pattern: any): boolean {
     if (!sample || !pattern) {
       console.log(
@@ -315,6 +347,35 @@ export const softAssert: SoftAssert = {
     }
     return assertPassed;
   },
+  notIncludes(sample:any, pattern:any):boolean {
+        if (!sample || !pattern) {
+            console.log('ERROR [includes] please provide the sample and pattern arguments');
+            process.exit(1);
+        }
+        let assertPassed = false;
+        if (Array.isArray(sample) === true && Array.isArray(pattern) === true) {
+            console.log('sample is object or array');
+            try {
+                (0, chai_1.expect)(sample).not.include.members(pattern);
+                assertPassed = true;
+            }
+            catch (error) {
+                const e:any = error;
+                this.failedAsserts.push(e);
+            }
+        }
+        else {
+            try {
+                (0, chai_1.expect)(sample).not.deep.include(pattern);
+                assertPassed = true;
+            }
+            catch (error) {
+                const e:any = error;
+                this.failedAsserts.push(e);
+            }
+        }
+        return assertPassed;
+    },
   isUndefined(value: any): boolean {
     let assertPassed = false;
     try {
