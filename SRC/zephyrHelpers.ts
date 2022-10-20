@@ -275,7 +275,7 @@ export const softAssert: SoftAssert = {
   equals(value: any, condition: any): boolean {
     if (!value || !condition) {
       console.log(
-        'ERROR [includes] please provide the value and condition arguments'
+        'ERROR [equals] please provide the value and condition arguments'
       );
       process.exit(1);
     }
@@ -292,7 +292,7 @@ export const softAssert: SoftAssert = {
   notEquals(value: any, condition: any): boolean {
     if (!value || !condition) {
       console.log(
-        'ERROR [includes] please provide the value and condition arguments'
+        'ERROR [notEquals] please provide the value and condition arguments'
       );
       process.exit(1);
     }
@@ -309,7 +309,7 @@ export const softAssert: SoftAssert = {
   deepEquals(value: any, condition: any): boolean {
     if (!value || !condition) {
       console.log(
-        'ERROR [includes] please provide the value and condition arguments'
+        'ERROR [deepEquals] please provide the value and condition arguments'
       );
       process.exit(1);
     }
@@ -352,9 +352,9 @@ export const softAssert: SoftAssert = {
     return assertPassed;
   },
   notIncludes(sample: any, pattern: any): boolean {
-    if (!sample || !pattern) {
+    if (sample === undefined || pattern === undefined) {
       console.log(
-        'ERROR [includes] please provide the sample and pattern arguments'
+        'ERROR [notIncludes] please provide the sample and pattern arguments'
       );
       process.exit(1);
     }
@@ -412,7 +412,7 @@ export const softAssert: SoftAssert = {
   ): boolean {
     if (!obj || !arrayWithKeys) {
       console.log(
-        'ERROR [includes] please provide the sample and pattern arguments'
+        'ERROR [objectHasAllKeys] please provide the sample and pattern arguments'
       );
       process.exit(1);
     }
