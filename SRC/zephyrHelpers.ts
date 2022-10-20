@@ -138,7 +138,7 @@ export const getAllTestcases = async (): Promise<void> => {
     .get(`/rest/tests/1.0/project/${variables.projectId}/testcases`)
     .auth(variables.username, variables.password)
     .expect(200)
-    .then((res) => {
+    .then((res:any) => {
       variables.testCasesArray = res.body.testCases;
     });
 };
@@ -184,7 +184,7 @@ const createTestResult = async (testcaseId: number): Promise<number> => {
     .set('jira-project-id', variables.projectId)
     .auth(variables.username, variables.password)
     .send(jsonTestRunPayload)
-    .then((res) => {
+    .then((res:any) => {
       expect(res.statusCode).eq(201);
       testrun = res;
     });
@@ -239,7 +239,7 @@ export const updateTestResult = async (
     .set('content-Type', 'application/json;charset=UTF-8')
     .set('jira-project-id', variables.projectId)
     .send(jsonPayload)
-    .then((res) => {
+    .then((res:any) => {
       expect(res.statusCode).eq(200);
     });
 };
@@ -290,7 +290,7 @@ export const softAssert: SoftAssert = {
     return assertPassed;
   },
   notEquals(value: any, condition: any): boolean {
-    if (!value || !condition) {
+    if (value === undefined || condition === undefined) {
       console.log(
         'ERROR [notEquals] please provide the value and condition arguments'
       );
