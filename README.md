@@ -36,15 +36,15 @@ Secondly use the function `getAllTestCases()` to create an array with all the ex
 ```js
 before(async function () {
   // FIRST: setting variables for zephyrHelpers (without the project ID)
-  await zephyrHelpers.setVars({
+  await zephyrHelpers.init({
     zephyrURL: 'https://<url.to.your.jira.env>',
     zephyrUser: credentials.zephyrUser,
     zephyrPass: credentials.zephyrPassword,
-    jiraUser: { firstName: 'name', lastName: 'lastName' },
+    jiraUser: 'me@company.org',
     zephyrProjectName: projectName,
     zephyrFolderName: folderName,
     environment: process.env.ENV,
-    defaultJiraId: 'JIRAUSER23600',
+    defaultJiraId: 'JIRAUSER123',
   });
   // SECOND: filter all testcases, looking for a match based on our project ID
   testcaseArray = await zephyrHelpers.getAllTestcases();

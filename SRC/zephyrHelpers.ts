@@ -75,9 +75,17 @@ const getJiraUser = async (
  */
 const getJiraUserId = async (zephyrConfig: ZephyrConfig): Promise<string> => {
   if (process.env.jiraUser === 'Jenkins') {
+<<<<<<< HEAD
     return zephyrConfig.defaultJiraId
   } else {
     const jiraUsersResponse: Response<JiraUser> = await getJiraUser(zephyrConfig);
+=======
+    return zephyrConfig.defaultJiraId;
+  } else {
+    const jiraUsersResponse: Response<JiraUser> = await getJiraUser(
+      zephyrConfig
+    );
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
     return jiraUsersResponse.body.key;
   }
 };
@@ -136,7 +144,7 @@ export const getAllTestcases = async (): Promise<void> => {
     .get(`/rest/tests/1.0/project/${variables.projectId}/testcases`)
     .auth(variables.username, variables.password)
     .expect(200)
-    .then((res) => {
+    .then((res:any) => {
       variables.testCasesArray = res.body.testCases;
     });
 };
@@ -182,7 +190,7 @@ const createTestResult = async (testcaseId: number): Promise<number> => {
     .set('jira-project-id', variables.projectId)
     .auth(variables.username, variables.password)
     .send(jsonTestRunPayload)
-    .then((res) => {
+    .then((res:any) => {
       expect(res.statusCode).eq(201);
       testrun = res;
     });
@@ -237,7 +245,7 @@ export const updateTestResult = async (
     .set('content-Type', 'application/json;charset=UTF-8')
     .set('jira-project-id', variables.projectId)
     .send(jsonPayload)
-    .then((res) => {
+    .then((res:any) => {
       expect(res.statusCode).eq(200);
     });
 };
@@ -282,7 +290,45 @@ export const softAssert: SoftAssert = {
       expect(value).equal(condition);
       assertPassed = true;
     } catch (error) {
+<<<<<<< HEAD
       const e: any = error
+=======
+      const e: any = error;
+      this.failedAsserts.push(e);
+    }
+    return assertPassed;
+  },
+  notEquals(value: any, condition: any): boolean {
+    if (value === undefined || condition === undefined) {
+      console.log(
+        'ERROR [notEquals] please provide the value and condition arguments'
+      );
+      process.exit(1);
+    }
+    let assertPassed = false;
+    try {
+      expect(value).not.equal(condition);
+      assertPassed = true;
+    } catch (error) {
+      const e: any = error;
+      this.failedAsserts.push(e);
+    }
+    return assertPassed;
+  },
+  deepEquals(value: any, condition: any): boolean {
+    if (!value || !condition) {
+      console.log(
+        'ERROR [deepEquals] please provide the value and condition arguments'
+      );
+      process.exit(1);
+    }
+    let assertPassed = false;
+    try {
+      expect(value).deep.equal(condition);
+      assertPassed = true;
+    } catch (error) {
+      const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
     return assertPassed;
@@ -301,7 +347,11 @@ export const softAssert: SoftAssert = {
         expect(sample).include.members(pattern);
         assertPassed = true;
       } catch (error) {
+<<<<<<< HEAD
         const e: any = error
+=======
+        const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
         this.failedAsserts.push(e);
       }
     } else {
@@ -309,7 +359,39 @@ export const softAssert: SoftAssert = {
         expect(sample).deep.include(pattern);
         assertPassed = true;
       } catch (error) {
+<<<<<<< HEAD
         const e: any = error
+=======
+        const e: any = error;
+        this.failedAsserts.push(e);
+      }
+    }
+    return assertPassed;
+  },
+  notIncludes(sample: any, pattern: any): boolean {
+    if (sample === undefined || pattern === undefined) {
+      console.log(
+        'ERROR [notIncludes] please provide the sample and pattern arguments'
+      );
+      process.exit(1);
+    }
+    let assertPassed = false;
+    if (Array.isArray(sample) === true && Array.isArray(pattern) === true) {
+      console.log('sample is object or array');
+      try {
+        expect(sample).not.include.members(pattern);
+        assertPassed = true;
+      } catch (error) {
+        const e: any = error;
+        this.failedAsserts.push(e);
+      }
+    } else {
+      try {
+        expect(sample).not.deep.include(pattern);
+        assertPassed = true;
+      } catch (error) {
+        const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
         this.failedAsserts.push(e);
       }
     }
@@ -321,7 +403,11 @@ export const softAssert: SoftAssert = {
       expect(value).equal(undefined);
       assertPassed = true;
     } catch (error) {
+<<<<<<< HEAD
       const e: any = error
+=======
+      const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
     return assertPassed;
@@ -333,7 +419,11 @@ export const softAssert: SoftAssert = {
       expect(value).to.be.null;
       assertPassed = true;
     } catch (error) {
+<<<<<<< HEAD
       const e: any = error
+=======
+      const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
     return assertPassed;
@@ -348,7 +438,7 @@ export const softAssert: SoftAssert = {
   ): boolean {
     if (!obj || !arrayWithKeys) {
       console.log(
-        'ERROR [includes] please provide the sample and pattern arguments'
+        'ERROR [objectHasAllKeys] please provide the sample and pattern arguments'
       );
       process.exit(1);
     }
@@ -367,7 +457,11 @@ export const softAssert: SoftAssert = {
       expect(obj).to.have.all.keys(arrayWithKeys);
       assertPassed = true;
     } catch (error) {
+<<<<<<< HEAD
       const e: any = error
+=======
+      const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
       assertPassed = false;
     }
@@ -382,7 +476,11 @@ export const softAssert: SoftAssert = {
       expect(Object.keys(obj)).lengthOf(0);
       assertPassed = true;
     } catch (error) {
+<<<<<<< HEAD
       const e: any = error
+=======
+      const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
     return assertPassed;
@@ -401,7 +499,11 @@ export const softAssert: SoftAssert = {
         expect(value).not.be.empty;
         assertPassed = true;
       } catch (error) {
+<<<<<<< HEAD
         const e: any = error
+=======
+        const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
         this.failedAsserts.push(e);
       }
     }
@@ -409,7 +511,11 @@ export const softAssert: SoftAssert = {
       try {
         expect(value).not.be.null;
       } catch (error) {
+<<<<<<< HEAD
         const e: any = error
+=======
+        const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
         this.failedAsserts.push(e);
         assertPassed = false;
       }
@@ -417,20 +523,31 @@ export const softAssert: SoftAssert = {
     return assertPassed;
   },
   isOneOf(arr: [], value: any): boolean {
+<<<<<<< HEAD
     let assertPassed = false
+=======
+    let assertPassed = false;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
     if (!value) {
       console.log('ERROR [isOneOf] please pass an argument');
       process.exit(1);
     }
     try {
+<<<<<<< HEAD
       expect(value).to.be.oneOf(arr)
       assertPassed = true
     }
     catch (error) {
       const e: any = error
+=======
+      expect(value).to.be.oneOf(arr);
+      assertPassed = true;
+    } catch (error) {
+      const e: any = error;
+>>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
-    return assertPassed
+    return assertPassed;
   },
   /**
    * Use this function at the end of a test to check if any of the soft-asserts failed.
