@@ -75,17 +75,11 @@ const getJiraUser = async (
  */
 const getJiraUserId = async (zephyrConfig: ZephyrConfig): Promise<string> => {
   if (process.env.jiraUser === 'Jenkins') {
-<<<<<<< HEAD
-    return zephyrConfig.defaultJiraId
-  } else {
-    const jiraUsersResponse: Response<JiraUser> = await getJiraUser(zephyrConfig);
-=======
     return zephyrConfig.defaultJiraId;
   } else {
     const jiraUsersResponse: Response<JiraUser> = await getJiraUser(
       zephyrConfig
     );
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
     return jiraUsersResponse.body.key;
   }
 };
@@ -290,9 +284,6 @@ export const softAssert: SoftAssert = {
       expect(value).equal(condition);
       assertPassed = true;
     } catch (error) {
-<<<<<<< HEAD
-      const e: any = error
-=======
       const e: any = error;
       this.failedAsserts.push(e);
     }
@@ -328,7 +319,6 @@ export const softAssert: SoftAssert = {
       assertPassed = true;
     } catch (error) {
       const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
     return assertPassed;
@@ -347,11 +337,7 @@ export const softAssert: SoftAssert = {
         expect(sample).include.members(pattern);
         assertPassed = true;
       } catch (error) {
-<<<<<<< HEAD
-        const e: any = error
-=======
         const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
         this.failedAsserts.push(e);
       }
     } else {
@@ -359,9 +345,6 @@ export const softAssert: SoftAssert = {
         expect(sample).deep.include(pattern);
         assertPassed = true;
       } catch (error) {
-<<<<<<< HEAD
-        const e: any = error
-=======
         const e: any = error;
         this.failedAsserts.push(e);
       }
@@ -391,7 +374,6 @@ export const softAssert: SoftAssert = {
         assertPassed = true;
       } catch (error) {
         const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
         this.failedAsserts.push(e);
       }
     }
@@ -403,11 +385,7 @@ export const softAssert: SoftAssert = {
       expect(value).equal(undefined);
       assertPassed = true;
     } catch (error) {
-<<<<<<< HEAD
-      const e: any = error
-=======
       const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
     return assertPassed;
@@ -419,11 +397,7 @@ export const softAssert: SoftAssert = {
       expect(value).to.be.null;
       assertPassed = true;
     } catch (error) {
-<<<<<<< HEAD
-      const e: any = error
-=======
       const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
     return assertPassed;
@@ -457,11 +431,7 @@ export const softAssert: SoftAssert = {
       expect(obj).to.have.all.keys(arrayWithKeys);
       assertPassed = true;
     } catch (error) {
-<<<<<<< HEAD
-      const e: any = error
-=======
       const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
       assertPassed = false;
     }
@@ -476,11 +446,7 @@ export const softAssert: SoftAssert = {
       expect(Object.keys(obj)).lengthOf(0);
       assertPassed = true;
     } catch (error) {
-<<<<<<< HEAD
-      const e: any = error
-=======
       const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
     return assertPassed;
@@ -499,11 +465,7 @@ export const softAssert: SoftAssert = {
         expect(value).not.be.empty;
         assertPassed = true;
       } catch (error) {
-<<<<<<< HEAD
-        const e: any = error
-=======
         const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
         this.failedAsserts.push(e);
       }
     }
@@ -511,11 +473,7 @@ export const softAssert: SoftAssert = {
       try {
         expect(value).not.be.null;
       } catch (error) {
-<<<<<<< HEAD
-        const e: any = error
-=======
         const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
         this.failedAsserts.push(e);
         assertPassed = false;
       }
@@ -523,28 +481,16 @@ export const softAssert: SoftAssert = {
     return assertPassed;
   },
   isOneOf(arr: [], value: any): boolean {
-<<<<<<< HEAD
-    let assertPassed = false
-=======
     let assertPassed = false;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
     if (!value) {
       console.log('ERROR [isOneOf] please pass an argument');
       process.exit(1);
     }
     try {
-<<<<<<< HEAD
-      expect(value).to.be.oneOf(arr)
-      assertPassed = true
-    }
-    catch (error) {
-      const e: any = error
-=======
       expect(value).to.be.oneOf(arr);
       assertPassed = true;
     } catch (error) {
       const e: any = error;
->>>>>>> bd0fabb95d246da295e8d7275b7aa90d82f862d6
       this.failedAsserts.push(e);
     }
     return assertPassed;
