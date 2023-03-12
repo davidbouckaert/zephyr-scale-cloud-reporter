@@ -1,7 +1,6 @@
-export interface TestCases {
+export interface Statuses {
   values: {
     id: string;
-    key: string
     name: string;
   }[]
 }
