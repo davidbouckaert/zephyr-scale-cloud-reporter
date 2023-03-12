@@ -1,30 +1,28 @@
 import { TestCase } from './testcases.interface';
 
 export interface Variables {
-  url: string;
-  username: string;
-  password: string | undefined;
+  zephyrURL: string;
+  jiraURL: string;
+  jiraApiToken: string;
+  zephyrApiToken: string;
   environment: string | undefined;
-  jirauser: string;
-  projectName: string;
-  projectId: string;
-  defaultJiraId: string;
-  jiraUserId: string;
-  envId: number;
+  projectKey: string;
+  testCycleName: string;
+  defaultJiraDisplayName: string;
+  jiraDisplayName: string;
   testCasesArray: TestCase[];
   folderName?: string; // er is niet altijd een folder
 }
 
 export const defaultVariables: Variables = {
-  url: undefined,
-  username: undefined,
-  password: undefined,
+  jiraURL: undefined,
+  zephyrURL: undefined,
+  jiraApiToken: undefined,
+  zephyrApiToken: undefined,
   environment: undefined,
-  jirauser: undefined,
-  projectName: undefined,
-  projectId: undefined,
-  defaultJiraId: undefined,
-  jiraUserId: undefined,
-  envId: undefined,
+  jiraDisplayName: undefined,
+  projectKey: undefined,
+  defaultJiraDisplayName: undefined,
   testCasesArray: undefined,
+  testCycleName: undefined,
 };

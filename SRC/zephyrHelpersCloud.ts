@@ -10,7 +10,7 @@ import { TestCase } from './interfaces/testcases.interface';
 import { TestResultDetails } from './interfaces/test-result-details.interface';
 import { TestResultBody } from './interfaces/update-test-result-body.interface';
 import { SoftAssert } from './interfaces/soft-assert.interface';
-import { JiraUser } from './interfaces/jira-user.interface';
+import { JiraAccount } from './interfaces/jiraAccount.interface';
 import { Response } from './interfaces/response.interface';
 import { NewTestResult } from './interfaces/new-test-result.interface';
 
@@ -30,82 +30,6 @@ const validateObjectValues = (obj: { [key: string]: any }, msg: string) => {
   }
 };
 
-/**
- * This function makes a HTTP call to get an array with all the projects
- * @param zephyrConfig
- * @returns
- */
-const getProjects = async (
-  zephyrConfig: ZephyrConfig
-): Promise<Response<Project[]>> =>
-  request(zephyrConfig.zephyrURL)
-    .get('/rest/tests/1.0/project')
-    .auth(zephyrConfig.zephyrUser, zephyrConfig.zephyrPass)
-    .expect(200);
-
-/**
- * This function loops over the array returned from getProjects and looks for a certain name, then returns the ID.
- * @param {ZephyrConfig} zephyrConfig
- */
-const getProjectsId = async (
-  zephyrConfig: ZephyrConfig
-): Promise<string | undefined> => {
-  const projectsResponse: Response<Project[]> = await getProjects(zephyrConfig);
-  return projectsResponse.body.find(
-    (project) => project.name === zephyrConfig.zephyrProjectName
-  )?.id;
-};
-
-/**
- * This function makes a HTTP call to lookup a specific jira user
- * @param zephyrConfig
- * @returns
- */
-const getJiraUser = async (
-  zephyrConfig: ZephyrConfig
-): Promise<Response<JiraUser>> =>
-  request(zephyrConfig.zephyrURL)
-    .get(`/rest/api/2/user?username=${zephyrConfig.jiraUsername}`)
-    .auth(zephyrConfig.zephyrUser, zephyrConfig.zephyrPass)
-    .expect(200);
-
-/**
- * This function returns the Key from any jira user object.
- * @param {ZephyrConfig} zephyrConfig
- */
-const getJiraUserId = async (zephyrConfig: ZephyrConfig): Promise<string> => {
-  if (process.env.jiraUser === 'Jenkins') {
-    return zephyrConfig.defaultJiraId;
-  } else {
-    const jiraUsersResponse: Response<JiraUser> = await getJiraUser(
-      zephyrConfig
-    );
-    return jiraUsersResponse.body.key;
-  }
-};
-
-const getEnvironments = async (
-  zephyrConfig: ZephyrConfig,
-  projectId: string
-): Promise<Response<Environment[]>> =>
-  request(zephyrConfig.zephyrURL)
-    .get(`/rest/tests/1.0/project/${projectId}/environments`)
-    .set('jira-project-id', projectId)
-    .auth(zephyrConfig.zephyrUser, zephyrConfig.zephyrPass);
-
-const getEnvironmentId = async (
-  zephyrConfig: ZephyrConfig,
-  projectId: string
-): Promise<number> => {
-  const environmentResponse: Response<Environment[]> = await getEnvironments(
-    zephyrConfig,
-    projectId
-  );
-  return environmentResponse.body.find(
-    (env) => env.name === zephyrConfig.environment
-  )?.id;
-};
-
 const variables: Variables = defaultVariables;
 
 /**
@@ -114,20 +38,57 @@ const variables: Variables = defaultVariables;
  */
 export async function init(zephyrConfig: ZephyrConfig) {
   validateObjectValues(zephyrConfig, 'init');
-  const projectId: string = await getProjectsId(zephyrConfig);
-
-  variables.url = zephyrConfig.zephyrURL;
-  variables.username = zephyrConfig.zephyrUser;
+  variables.zephyrURL = zephyrConfig.zephyrURL;
+  variables.jiraURL = zephyrConfig.jiraURL;
   variables.folderName = zephyrConfig.zephyrFolderName;
-  variables.password = zephyrConfig.zephyrPass;
+  variables.zephyrApiToken = zephyrConfig.zephyrApiToken;
+  variables.jiraApiToken = zephyrConfig.jiraApiToken;
   variables.environment = zephyrConfig.environment;
-  variables.projectName = zephyrConfig.zephyrProjectName;
-  variables.projectId = projectId;
-  variables.envId = await getEnvironmentId(zephyrConfig, projectId);
-  variables.jirauser = zephyrConfig.jiraUsername;
-  variables.defaultJiraId = zephyrConfig.defaultJiraId;
-  variables.jiraUserId = await getJiraUserId(zephyrConfig);
+  variables.projectKey = zephyrConfig.zephyrProjectKey;
+  variables.defaultJiraDisplayName = zephyrConfig.defaultJiraDisplayName;
+  variables.jiraDisplayName = zephyrConfig.jiraDisplayName;
 }
+
+
+
+const getJiraAccounts = async () => {
+  let accounts;
+  await request(variables.jiraURL)
+    .get(`/rest/api/2/user/search?query&maxResults=2000`)
+    .set('Authorization', `Basic ${variables.jiraApiToken}`)
+    .then((res) => {
+      accounts = res.body;
+    });
+  return accounts;
+};
+
+export const getJiraAccountId = async (): Promise<string> => {
+  //TODO wat als de displayName niet gevonden is?
+  const allAccounts: JiraAccount[] = await getJiraAccounts(); // return de value van de key 'accountId' voor elke folder waar de value van de key 'displayName' gelijk is aan de naam die we zoeken
+  return allAccounts.find((account) => account.displayName === variables.jiraDisplayName)
+    .accountId;
+};
+
+const getEnvironmentNames = async (): Promise<Environment> => {
+  let environmentNames;
+  await request(variables.zephyrURL)
+    .get(`/environments?projectKey=${variables.projectKey}`)
+    .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
+    .then((res) => {
+      environmentNames = JSON.parse(res.text);
+    });
+  return environmentNames;
+};
+
+const logEnvironmentNames = async () => {
+  const allEnvironments: Environment = await getEnvironmentNames();
+  allEnvironments.values.forEach((environment: Environment) =>
+    console.log(`Available environment: ${environment.name}`)
+  );
+};
+
+
+
 
 /**
  * This function will get all testcases for a certain project and add them to variables.testCasesArray

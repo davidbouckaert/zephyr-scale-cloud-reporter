@@ -1,10 +1,12 @@
 export interface ZephyrConfig {
   zephyrURL: string;
-  zephyrUser: string;
-  zephyrPass: string | undefined;
-  jiraUsername: string;
-  zephyrProjectName: string;
+  jiraURL: string;
+  zephyrApiToken: string;
+  jiraApiToken: string;
+  jiraDisplayName: string;
   zephyrFolderName: string;
+  zephyrTestCycleName: string;
   environment: string | undefined;
-  defaultJiraId: string;
+  defaultJiraDisplayName: string;
+  zephyrProjectKey: string
 }
