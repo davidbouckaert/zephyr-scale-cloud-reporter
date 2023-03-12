@@ -4,15 +4,13 @@ import request from 'supertest';
 import { expect, assert } from 'chai';
 import { ZephyrConfig } from './interfaces/zephyr-config.interface';
 import { defaultVariables, Variables } from './interfaces/variables.interface';
-import { Project } from './interfaces/project.interface';
-import { Environment } from './interfaces/environment.interface';
-import { TestCase } from './interfaces/testcases.interface';
-import { TestResultDetails } from './interfaces/test-result-details.interface';
-import { TestResultBody } from './interfaces/update-test-result-body.interface';
+import { Environments } from './interfaces/environments.interface';
+import { Statuses } from './interfaces/statuses.interface';
+import { TestCycles } from './interfaces/testcycles.interface';
+import { Folders } from './interfaces/folders.interface';
+import { TestCases } from './interfaces/testcases.interface';
 import { SoftAssert } from './interfaces/soft-assert.interface';
 import { JiraAccount } from './interfaces/jiraAccount.interface';
-import { Response } from './interfaces/response.interface';
-import { NewTestResult } from './interfaces/new-test-result.interface';
 
 /**
  * This function checks the value of all the keys in an object, if the value is **undefined** an error is logged.
@@ -40,16 +38,12 @@ export async function init(zephyrConfig: ZephyrConfig) {
   validateObjectValues(zephyrConfig, 'init');
   variables.zephyrURL = zephyrConfig.zephyrURL;
   variables.jiraURL = zephyrConfig.jiraURL;
-  variables.folderName = zephyrConfig.zephyrFolderName;
   variables.zephyrApiToken = zephyrConfig.zephyrApiToken;
   variables.jiraApiToken = zephyrConfig.jiraApiToken;
-  variables.environment = zephyrConfig.environment;
   variables.projectKey = zephyrConfig.zephyrProjectKey;
   variables.defaultJiraDisplayName = zephyrConfig.defaultJiraDisplayName;
   variables.jiraDisplayName = zephyrConfig.jiraDisplayName;
 }
-
-
 
 const getJiraAccounts = async () => {
   let accounts;
@@ -62,168 +56,125 @@ const getJiraAccounts = async () => {
   return accounts;
 };
 
-export const getJiraAccountId = async (): Promise<string> => {
+const getJiraAccountId = async (): Promise<string> => {
   //TODO wat als de displayName niet gevonden is?
   const allAccounts: JiraAccount[] = await getJiraAccounts(); // return de value van de key 'accountId' voor elke folder waar de value van de key 'displayName' gelijk is aan de naam die we zoeken
   return allAccounts.find((account) => account.displayName === variables.jiraDisplayName)
     .accountId;
 };
 
-const getEnvironmentNames = async (): Promise<Environment> => {
-  let environmentNames;
+const getEnvironmentNames = async (): Promise<Environments> => {
+  let environments;
   await request(variables.zephyrURL)
     .get(`/environments?projectKey=${variables.projectKey}`)
     .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
     .then((res) => {
-      environmentNames = JSON.parse(res.text);
+      environments = JSON.parse(res.text);
     });
-  return environmentNames;
+  return environments;
 };
 
-const logEnvironmentNames = async () => {
-  const allEnvironments: Environment = await getEnvironmentNames();
-  allEnvironments.values.forEach((environment: Environment) =>
-    console.log(`Available environment: ${environment.name}`)
+export const logEnvironmentNames = async () => {
+  const allEnvironments: Environments = await getEnvironmentNames();
+  allEnvironments.values.forEach((env) =>
+    console.log(`Available environment: ${env.name}`)
   );
 };
 
-
-
-
-/**
- * This function will get all testcases for a certain project and add them to variables.testCasesArray
- * @returns {void}
- */
-export const getAllTestcases = async (): Promise<void> => {
-  await request(variables.url)
-    .get(`/rest/tests/1.0/project/${variables.projectId}/testcases`)
-    .auth(variables.username, variables.password)
-    .expect(200)
-    .then((res: any) => {
-      variables.testCasesArray = res.body.testCases;
+const getTestCases = async (folderName: string): Promise<TestCases> => {
+  let testcases;
+  const folder_id = await getFolderId(folderName);
+  await request(variables.zephyrURL)
+    .get(
+      `/testcases?maxResults=1000&projectKey=${variables.projectKey}&folderId=${folder_id}`
+    )
+    .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
+    .then((res) => {
+      testcases = JSON.parse(res.text);
     });
+  return testcases;
 };
 
-const filterTestcase = async (
-  testcaseFolderName: string,
-  testcaseName: string
-): Promise<TestCase> => {
-  const filteredTestcase: TestCase = variables.testCasesArray.find(
-    (testcase: TestCase) =>
-      testcaseFolderName === testcase.folder?.name &&
-      testcaseName === testcase.name
+const getTestCaseKey = async (folderName: string, testCaseName: string) => {
+  const allTestCases: TestCases = await getTestCases(folderName); // return de value van de key 'key' voor elke folder waar de value van de key 'name' gelijk is aan de naam die we zoeken
+  return allTestCases.values.find((testCase) => testCase.name === testCaseName)
+    .key;
+};
+
+const getFolders = async (): Promise<Folders> => {
+  let folders;
+  await request(variables.zephyrURL)
+    .get(`/folders?maxResults=500&projectKey=${variables.projectKey}`)
+    .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
+    .then((res) => {
+      folders = JSON.parse(res.text);
+    });
+  return folders;
+};
+
+const getFolderId = async (folderName: string) => {
+  const allFolders = await getFolders(); // return de value van de key 'id' voor elke folder waar de value van de key 'name' gelijk is aan de naam die we zoeken
+  return allFolders.values.find((folder) => folder.name === folderName).id;
+};
+
+const getTestCycles = async (): Promise<TestCycles> => {
+  let testcycles;
+  await request(variables.zephyrURL)
+    .get(`/testcycles?maxResults=500&projectKey=${variables.projectKey}`)
+    .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
+    .then((res) => {
+      testcycles = JSON.parse(res.text);
+    });
+  return testcycles;
+};
+
+const getTestCycleKey = async (testCylcleName: string) => {
+  const allTestCycles = await getTestCycles(); // return de value van de key 'key' voor elke folder waar de value van de key 'name' gelijk is aan de naam die we zoeken
+  return allTestCycles.values.find(
+    (testCylce) => testCylce.name === testCylcleName
+  ).key;
+};
+
+const getStatusNames = async (): Promise<Statuses> => {
+  let statusNames;
+  await request(variables.zephyrURL)
+    .get(`/statuses?projectKey=${variables.projectKey}`)
+    .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
+    .then((res) => {
+      statusNames = JSON.parse(res.text);
+    });
+  return statusNames;
+};
+
+export const logStatusNames = async () => {
+  const allStatuses = await getStatusNames();
+  allStatuses.values.forEach((status) =>
+    console.log(`Available status: ${status.name}`)
   );
-  if (filteredTestcase === undefined) {
-    console.log(
-      `ERROR: [filterTestcase] No testcase found with name: ${testcaseName}, in folder: ${testcaseFolderName}`
-    );
-    process.exit(1);
-  }
-  return filteredTestcase;
 };
 
-/**
- * Creating the test result 'entry' in the test run context.
- * @param {*} testcaseId
- * @returns
- */
-const createTestResult = async (testcaseId: number): Promise<number> => {
-  let testrun: Response<NewTestResult>;
-
-  const testrunPayload = {
-    testCaseId: testcaseId,
-    assignedTo: variables.jiraUserId,
-    environmentId: variables.envId,
+export const createNewTestExecution = async (
+  statusName: string,
+  environmentName: string,
+  folderName: string,
+  testCaseName: string,
+  testCycleName: string
+): Promise<void> => {
+  const payload = {
+    projectKey: variables.projectKey,
+    testCaseKey: getTestCaseKey(folderName, testCaseName),
+    testCycleKey: getTestCycleKey(testCycleName),
+    statusName,
+    environmentName,
+    executedById: getJiraAccountId(),
   };
-
-  const jsonTestRunPayload = JSON.stringify(testrunPayload);
-
-  await request(variables.url)
-    .post('/rest/tests/1.0/testresult')
-    .set('content-Length', Buffer.byteLength(jsonTestRunPayload).toString())
-    .set('content-Type', 'application/json;charset=UTF-8')
-    .set('jira-project-id', variables.projectId)
-    .auth(variables.username, variables.password)
-    .send(jsonTestRunPayload)
-    .then((res: any) => {
-      expect(res.statusCode).eq(201);
-      testrun = res;
+  await request(variables.zephyrURL)
+    .post(`/testexecutions`)
+    .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
+    .send(payload)
+    .then((res) => {
+      console.log(JSON.parse(res.text));
     });
-
-  return testrun.body.id;
-};
-
-/**
- * Updating the test result 'entry' with the passed/failed status, based on the 'test run id'
- * @param {object} params  testrunId, status (passed or failed)
- */
-export const updateTestResult = async (
-  testResultDetails: TestResultDetails
-) => {
-  const { testRunId, testStatus } = testResultDetails;
-  const now = new Date();
-  const jsonDate = now.toJSON();
-  let status;
-
-  validateObjectValues(testResultDetails, 'updateTestResult');
-
-  switch (testStatus) {
-    case true:
-      status = 10166; // todo hardcoded: need method for these
-      break;
-    case false:
-      status = 10167;
-      console.log('> WARNING: test restult status = "failed"');
-      break;
-    default:
-      status = 10167;
-      console.log('> WARNING: test restult status = "default(failed)"');
-      break;
-  }
-
-  const payload: TestResultBody[] = [
-    {
-      id: testRunId,
-      testResultStatusId: status,
-      userKey: variables.jiraUserId,
-      executionDate: jsonDate,
-      actualStartDate: jsonDate,
-    },
-  ];
-
-  const jsonPayload: string = JSON.stringify(payload);
-
-  await request(variables.url)
-    .put('/rest/tests/1.0/testresult')
-    .auth(variables.username, variables.password)
-    .set('content-Length', Buffer.byteLength(jsonPayload).toString())
-    .set('content-Type', 'application/json;charset=UTF-8')
-    .set('jira-project-id', variables.projectId)
-    .send(jsonPayload)
-    .then((res: any) => {
-      expect(res.statusCode).eq(200);
-    });
-};
-
-/**
- * This function creates a new test run and resturns the testrun ID
- * @param {string} testcaseFolderName name of the folder the testcase is in
- * @param {string} testcaseName name of the testcase
- * @returns {number} testrun ID
- */
-export const createNewTestrun = async (
-  testcaseFolderName: string,
-  testcaseName: string
-): Promise<number> => {
-  // searching for the correct test case (using the test name and folder name).
-  const filteredTestcase: TestCase = await filterTestcase(
-    testcaseFolderName,
-    testcaseName
-  );
-
-  // create test run & collect testrun ID.
-  const testrunId: number = await createTestResult(filteredTestcase.id);
-  return testrunId;
 };
 
 /**

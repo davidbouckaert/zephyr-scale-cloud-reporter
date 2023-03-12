@@ -1,7 +1,6 @@
-export interface TestCases {
+export interface Folders {
   values: {
     id: string;
-    key: string
     name: string;
   }[]
 }

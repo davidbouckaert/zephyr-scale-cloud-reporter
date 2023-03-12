@@ -1,4 +1,4 @@
-interface Environment {
+export interface Environments {
   values: {
     id: string;
     name: string;

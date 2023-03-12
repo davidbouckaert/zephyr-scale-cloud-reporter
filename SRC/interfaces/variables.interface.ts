@@ -1,17 +1,15 @@
-import { TestCase } from './testcases.interface';
+import { TestCases } from './testcases.interface';
 
 export interface Variables {
   zephyrURL: string;
   jiraURL: string;
   jiraApiToken: string;
   zephyrApiToken: string;
-  environment: string | undefined;
   projectKey: string;
   testCycleName: string;
   defaultJiraDisplayName: string;
   jiraDisplayName: string;
-  testCasesArray: TestCase[];
-  folderName?: string; // er is niet altijd een folder
+  testCasesArray: TestCases;
 }
 
 export const defaultVariables: Variables = {
@@ -19,7 +17,6 @@ export const defaultVariables: Variables = {
   zephyrURL: undefined,
   jiraApiToken: undefined,
   zephyrApiToken: undefined,
-  environment: undefined,
   jiraDisplayName: undefined,
   projectKey: undefined,
   defaultJiraDisplayName: undefined,

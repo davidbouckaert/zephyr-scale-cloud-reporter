@@ -1,7 +1,7 @@
 export {
   init,
-  getAllTestcases,
-  updateTestResult,
-  createNewTestrun,
+  createNewTestExecution,
+  logStatusNames,
+  logEnvironmentNames,
   softAssert,
-} from './zephyrHelpers';
+} from './zephyrHelpersCloud';
