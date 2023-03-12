@@ -1,7 +1,7 @@
 {
-  "name": "@dbouckaert/zephyr-scale-reporter",
-  "version": "1.4.6",
-  "description": "ZH, or zephyr helpers is a Node JS framework that implements test suites with Zephyr scale for Jira. It uses a soft-assert function to absorb failing assertions and translate them to a true/false value.",
+  "name": "@dbouckaert/zephyr-scale-cloud-reporter",
+  "version": "1.0.0",
+  "description": "ZH Cloud, or zephyr helpers is a Node JS framework that implements test suites with Zephyr scale for Jira. It uses a soft-assert function to absorb failing assertions and translate them to a true/false value.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/davidbouckaert/ZH"
+    "url": "https://github.com/davidbouckaert/zephyr-scale-cloud-reporter"
   },
   "keywords": [
     "ZEPHYR",
@@ -22,14 +22,16 @@
     "reporter",
     "zephyr scale",
     "jira",
+    "cloud",
+    "jira-cloud",
     "mocha"
   ],
   "author": "David Bouckaert",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/davidbouckaert/ZH/issues"
+    "url": "https://github.com/davidbouckaert/zephyr-scale-cloud-reporter/issues"
   },
-  "homepage": "https://github.com/davidbouckaert/ZH#readme",
+  "homepage": "https://github.com/davidbouckaert/zephyr-scale-cloud-reporter#readme",
   "dependencies": {
     "@types/chai": "^4.3.3",
     "awesome-typescript-loader": "^5.2.1",
