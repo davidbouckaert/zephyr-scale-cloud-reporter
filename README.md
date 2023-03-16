@@ -1,6 +1,6 @@
-## What is ZH?
+## What is ZH Cloud?
 
-ZH, or zephyr helpers is a Node JS framework that implements test suites with [Zephyr scale](https://marketplace.atlassian.com/apps/1213259/zephyr-scale-test-management-for-jira?tab=overview&hosting=cloud) for Jira.
+ZH Cloud, or zephyr helpers is a Node JS framework that implements test suites with [Zephyr scale](https://marketplace.atlassian.com/apps/1213259/zephyr-scale-test-management-for-jira?tab=overview&hosting=cloud) for Jira.
 
 It uses a soft-assert function to absorb failing assertions and translate them to a true/false value.
 
@@ -8,10 +8,10 @@ It uses a soft-assert function to absorb failing assertions and translate them t
 
 [![npm version](https://badge.fury.io/js/@dbouckaert%2Fzh.svg)](https://badge.fury.io/js/@dbouckaert%2Fzh)
 
-Install ZH for Mac, Linux, or Windows
+Install ZH Cloud for Mac, Linux, or Windows
 
 ```bash
-npm install @dbouckaert/zh --save-dev
+npm install @davidbouckaert/zephyr-scale-cloud-reporter --save-dev
 ```
 
 ## License
@@ -23,31 +23,28 @@ This project is licensed under the terms of the [MIT license](/LICENSE).
 ## Getting started
 
 Include the module into your test suite.
-`const zh = require('@dbouckaert/zh')`
+`const zh = require('@davidbouckaert/zephyr-scale-cloud-reporter')`
 
 ### Initiation
 
-The first thing you'll want to do is to call the function `setVars()`
+The first thing you'll want to do is to call the function `init()`
 It populates the framework with critical information.
 One option is to do this inside of the `before` block.
-
-Secondly use the function `getAllTestCases()` to create an array with all the existing test cases in your Zephyr project - and store the result in an array.
 
 ```js
 before(async function () {
   // FIRST: setting variables for zephyrHelpers (without the project ID)
   await zephyrHelpers.init({
     zephyrURL: 'https://<url.to.your.jira.env>',
-    zephyrUser: credentials.zephyrUser,
-    zephyrPass: credentials.zephyrPassword,
-    jiraUser: 'me@company.org',
-    zephyrProjectName: projectName,
-    zephyrFolderName: folderName,
-    environment: process.env.ENV,
+    jiraURL: 'https://<url.to.smartbear>',
+    zephyrApiToken: ,
+    jiraApiToken: ,
+    zephyrProjectKey: 'TEST01',
+    zephyrFolderName: 'My_test_cases',
+    environment: 'TEST4',
+    jiraDisplayName: 'My Name'
     defaultJiraId: 'JIRAUSER123',
   });
-  // SECOND: filter all testcases, looking for a match based on our project ID
-  testcaseArray = await zephyrHelpers.getAllTestcases();
 });
 ```
 
@@ -78,10 +75,6 @@ _**Note: your CI system will also mark the job/run as failed**_
 it('Call /users without authorisation header', async function () {
   let payloadResult, responseCodeResult;
   const testName = 'GET /users without authorisation header (Sad flow)';
-  const testrunId = await zephyrHelpers.createNewTestrun({
-    testcaseArray: testcaseArray,
-    name: testName,
-  });
 
   await request(baseURL)
     .get(
@@ -95,10 +88,13 @@ it('Call /users without authorisation header', async function () {
       );
     });
 
-  zephyrHelpers.updateTestResult({
-    testRunId: testrunId,
-    testStatus: payloadResult && responseCodeResult,
-  });
+  zephyrHelpers.createNewTestExecution(
+    status,
+    env,
+    folderName,
+    testName,
+    testCycleName
+  );
   await zephyrHelpers.softAssert.assertAll();
 });
 ```

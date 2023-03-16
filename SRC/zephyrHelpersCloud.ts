@@ -59,8 +59,9 @@ const getJiraAccounts = async () => {
 const getJiraAccountId = async (): Promise<string> => {
   //TODO wat als de displayName niet gevonden is?
   const allAccounts: JiraAccount[] = await getJiraAccounts(); // return de value van de key 'accountId' voor elke folder waar de value van de key 'displayName' gelijk is aan de naam die we zoeken
-  return allAccounts.find((account) => account.displayName === variables.jiraDisplayName)
-    .accountId;
+  return allAccounts.find(
+    (account) => account.displayName === variables.jiraDisplayName
+  ).accountId;
 };
 
 const getEnvironmentNames = async (): Promise<Environments> => {
@@ -83,56 +84,95 @@ export const logEnvironmentNames = async () => {
 
 const getTestCases = async (folderName: string): Promise<TestCases> => {
   let testcases;
-  const folder_id = await getFolderId(folderName);
-  await request(variables.zephyrURL)
-    .get(
-      `/testcases?maxResults=1000&projectKey=${variables.projectKey}&folderId=${folder_id}`
-    )
-    .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
-    .then((res) => {
-      testcases = JSON.parse(res.text);
-    });
-  return testcases;
+  try {
+    const folder_id = await getFolderId(folderName);
+    await request(variables.zephyrURL)
+      .get(
+        `/testcases?maxResults=1000&projectKey=${variables.projectKey}&folderId=${folder_id}`
+      )
+      .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
+      .then((res) => {
+        testcases = JSON.parse(res.text);
+      });
+    return testcases;
+  } catch (err) {
+    console.log(`ERROR [getTestCases] - ${err}`);
+  }
 };
 
 const getTestCaseKey = async (folderName: string, testCaseName: string) => {
+  //TODO what if no match if found for this specific testcasename/folder
+  let key;
   const allTestCases: TestCases = await getTestCases(folderName); // return de value van de key 'key' voor elke folder waar de value van de key 'name' gelijk is aan de naam die we zoeken
-  return allTestCases.values.find((testCase) => testCase.name === testCaseName)
-    .key;
+
+  allTestCases.values.forEach((testCase) => {
+    if (testCase.name === testCaseName) {
+      key = testCase.key;
+    }
+  });
+  return key;
 };
 
 const getFolders = async (): Promise<Folders> => {
   let folders;
-  await request(variables.zephyrURL)
-    .get(`/folders?maxResults=500&projectKey=${variables.projectKey}`)
-    .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
-    .then((res) => {
-      folders = JSON.parse(res.text);
-    });
-  return folders;
+  try {
+    await request(variables.zephyrURL)
+      .get(`/folders?maxResults=500&projectKey=${variables.projectKey}`)
+      .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
+      .then((res) => {
+        folders = JSON.parse(res.text);
+      });
+    return folders;
+  } catch (err) {
+    console.log(`ERROR [getFolders] - ${err}`);
+  }
 };
 
 const getFolderId = async (folderName: string) => {
+  let id;
   const allFolders = await getFolders(); // return de value van de key 'id' voor elke folder waar de value van de key 'name' gelijk is aan de naam die we zoeken
-  return allFolders.values.find((folder) => folder.name === folderName).id;
+  allFolders.values.forEach((folder) => {
+    if (folder.name === folderName) {
+      id = folder.id;
+    }
+  });
+  if (id === undefined)
+    console.log(
+      `ERROR [getFolderId] - No folder found for name: ${folderName}`
+    );
+  return id;
 };
 
 const getTestCycles = async (): Promise<TestCycles> => {
   let testcycles;
-  await request(variables.zephyrURL)
-    .get(`/testcycles?maxResults=500&projectKey=${variables.projectKey}`)
-    .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
-    .then((res) => {
-      testcycles = JSON.parse(res.text);
-    });
-  return testcycles;
+  try {
+    await request(variables.zephyrURL)
+      .get(`/testcycles?maxResults=500&projectKey=${variables.projectKey}`)
+      .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
+      .then((res) => {
+        testcycles = JSON.parse(res.text);
+      });
+    return testcycles;
+  } catch (err) {
+    console.log(`ERROR [getTestCycles] - ${err}`);
+  }
 };
 
-const getTestCycleKey = async (testCylcleName: string) => {
+const getTestCycleKey = async (testCycleName: string) => {
+  //TODO what if the test case isn't part of the test cycle?
+  //! blijkbaar is dit geen probleem.
+  let key;
   const allTestCycles = await getTestCycles(); // return de value van de key 'key' voor elke folder waar de value van de key 'name' gelijk is aan de naam die we zoeken
-  return allTestCycles.values.find(
-    (testCylce) => testCylce.name === testCylcleName
-  ).key;
+  allTestCycles.values.forEach((testCylce) => {
+    if (testCylce.name === testCycleName) {
+      key = testCylce.key;
+    }
+  });
+  if (key === undefined)
+    console.log(
+      `ERROR [getFolderId] - No test cylce found for name: ${testCycleName}`
+    );
+  return key;
 };
 
 const getStatusNames = async (): Promise<Statuses> => {
@@ -154,26 +194,43 @@ export const logStatusNames = async () => {
 };
 
 export const createNewTestExecution = async (
-  statusName: string,
+  status: boolean,
   environmentName: string,
   folderName: string,
   testCaseName: string,
   testCycleName: string
 ): Promise<void> => {
+  let statusName: string;
+  if (status === false) {
+    statusName = 'Fail';
+  } else if (status === true) {
+    statusName = 'Pass';
+  } else {
+    console.log(
+      'ERROR [createNewTestExecution] please enter a valid test status'
+    );
+  }
   const payload = {
     projectKey: variables.projectKey,
-    testCaseKey: getTestCaseKey(folderName, testCaseName),
-    testCycleKey: getTestCycleKey(testCycleName),
+    testCaseKey: await getTestCaseKey(folderName, testCaseName),
+    testCycleKey: await getTestCycleKey(testCycleName),
     statusName,
     environmentName,
-    executedById: getJiraAccountId(),
+    executedById: await getJiraAccountId(),
   };
   await request(variables.zephyrURL)
     .post(`/testexecutions`)
     .set('Authorization', `Bearer ${variables.zephyrApiToken}`)
     .send(payload)
     .then((res) => {
-      console.log(JSON.parse(res.text));
+      const responseObj = JSON.parse(res.text);
+      if (res.statusCode !== 201) {
+        console.log(`ERROR [createNewTestExecution] ${responseObj.message}`);
+      } else {
+        console.log(
+          `INFO [createNewTestExecution] - Succesfully create a new test execution\nID:${responseObj.id}\nURL:${responseObj.self}`
+        );
+      }
     });
 };
 
@@ -329,7 +386,9 @@ export const softAssert: SoftAssert = {
       process.exit(1);
     }
     if (Array.isArray(arrayWithKeys) !== true) {
-      console.log('please pass an array as the arguments for "arrayWithKeys"');
+      console.log(
+        'ERROR [objectHasAllKeys] please pass an array as the arguments for "arrayWithKeys"'
+      );
       process.exit(1);
     }
     if (typeof obj !== 'object' || Array.isArray(obj) === true) {
