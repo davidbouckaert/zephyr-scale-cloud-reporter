@@ -61,7 +61,7 @@ const getJiraAccountId = async (): Promise<string> => {
   const allAccounts: JiraAccount[] = await getJiraAccounts();
   accountId = allAccounts.find(
     (account) => account.displayName === variables.jiraDisplayName
-  ).accountId;
+  )?.accountId;
 
   if (accountId === undefined) {
     console.log(`WARN [getJiraAccoundId] - No account id found for display name: ${variables.jiraDisplayName}. Using the default: ${variables.defaultJiraDisplayName}`);
