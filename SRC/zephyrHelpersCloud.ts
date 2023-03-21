@@ -57,11 +57,19 @@ const getJiraAccounts = async () => {
 };
 
 const getJiraAccountId = async (): Promise<string> => {
-  //TODO wat als de displayName niet gevonden is?
-  const allAccounts: JiraAccount[] = await getJiraAccounts(); // return de value van de key 'accountId' voor elke folder waar de value van de key 'displayName' gelijk is aan de naam die we zoeken
-  return allAccounts.find(
+  let accountId
+  const allAccounts: JiraAccount[] = await getJiraAccounts();
+  accountId = allAccounts.find(
     (account) => account.displayName === variables.jiraDisplayName
   ).accountId;
+
+  if (accountId === undefined) {
+    accountId = allAccounts.find(
+      (account) => account.displayName === variables.defaultJiraDisplayName
+    ).accountId;
+  }
+
+  return accountId;
 };
 
 const getEnvironmentNames = async (): Promise<Environments> => {
