@@ -41,8 +41,8 @@ export async function init(zephyrConfig: ZephyrConfig) {
   variables.zephyrApiToken = zephyrConfig.zephyrApiToken;
   variables.jiraApiToken = zephyrConfig.jiraApiToken;
   variables.projectKey = zephyrConfig.zephyrProjectKey;
-  variables.defaultJiraDisplayName = zephyrConfig.defaultJiraDisplayName;
   variables.jiraDisplayName = zephyrConfig.jiraDisplayName;
+  variables.defaultJiraDisplayName = zephyrConfig.defaultJiraDisplayName;
 }
 
 const getJiraAccounts = async () => {
@@ -64,6 +64,7 @@ const getJiraAccountId = async (): Promise<string> => {
   ).accountId;
 
   if (accountId === undefined) {
+    console.log(`WARN [getJiraAccoundId] - No account id found for display name: ${variables.jiraDisplayName}. Using the default: ${variables.defaultJiraDisplayName}`);
     accountId = allAccounts.find(
       (account) => account.displayName === variables.defaultJiraDisplayName
     ).accountId;
