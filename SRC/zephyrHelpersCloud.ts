@@ -12,6 +12,8 @@ import { TestCases } from './interfaces/testcases.interface';
 import { SoftAssert } from './interfaces/soft-assert.interface';
 import { JiraAccount } from './interfaces/jiraAccount.interface';
 
+let allAccounts: any
+
 /**
  * This function checks the value of all the keys in an object, if the value is **undefined** an error is logged.
  * @param {object} obj the object to check
@@ -43,6 +45,7 @@ export async function init(zephyrConfig: ZephyrConfig) {
   variables.projectKey = zephyrConfig.zephyrProjectKey;
   variables.jiraDisplayName = zephyrConfig.jiraDisplayName;
   variables.defaultJiraDisplayName = zephyrConfig.defaultJiraDisplayName;
+  allAccounts = await getJiraAccounts();
 }
 
 const getJiraAccounts = async () => {
@@ -58,15 +61,15 @@ const getJiraAccounts = async () => {
 
 const getJiraAccountId = async (): Promise<string> => {
   let accountId
-  const allAccounts: JiraAccount[] = await getJiraAccounts();
+  // const allAccounts: JiraAccount[] = await getJiraAccounts();
   accountId = allAccounts.find(
-    (account) => account.displayName === variables.jiraDisplayName
+    (account: any) => account.displayName === variables.jiraDisplayName
   )?.accountId;
 
   if (accountId === undefined) {
     console.log(`WARN [getJiraAccoundId] - No account id found for display name: ${variables.jiraDisplayName}. Using the default: ${variables.defaultJiraDisplayName}`);
     accountId = allAccounts.find(
-      (account) => account.displayName === variables.defaultJiraDisplayName
+      (account: any) => account.displayName === variables.defaultJiraDisplayName
     ).accountId;
   }
 
