@@ -108,7 +108,8 @@ const getTestCases = async (folderName: string): Promise<TestCases> => {
       });
     return testcases;
   } catch (err) {
-    console.log(`ERROR [getTestCases] - ${err}`);
+    console.log(`ERROR [getTestCases]`);
+    console.log(err);
   }
 };
 
@@ -238,10 +239,6 @@ export const createNewTestExecution = async (
       const responseObj = JSON.parse(res.text);
       if (res.statusCode !== 201) {
         console.log(`ERROR [createNewTestExecution] ${responseObj.message}`);
-      } else {
-        console.log(
-          `INFO [createNewTestExecution] - Succesfully create a new test execution\nID:${responseObj.id}\nURL:${responseObj.self}`
-        );
       }
     });
 };
@@ -364,6 +361,17 @@ export const softAssert: SoftAssert = {
     let assertPassed = false;
     try {
       expect(value).equal(undefined);
+      assertPassed = true;
+    } catch (error) {
+      const e: any = error;
+      this.failedAsserts.push(e);
+    }
+    return assertPassed;
+  },
+  isNotUndefined(value: any): boolean {
+    let assertPassed = false;
+    try {
+      expect(value).not.equal(undefined);
       assertPassed = true;
     } catch (error) {
       const e: any = error;

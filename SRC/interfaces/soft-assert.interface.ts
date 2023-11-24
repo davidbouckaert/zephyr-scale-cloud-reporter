@@ -6,6 +6,7 @@ export interface SoftAssert {
   includes: any;
   notIncludes: any;
   isUndefined: any;
+  isNotUndefined: any;
   isNull: any;
   objectHasAllKeys: any;
   isEmptyObject: any;
