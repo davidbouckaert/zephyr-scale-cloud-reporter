@@ -1,6 +1,6 @@
 {
   "name": "@davidbouckaert/zephyr-scale-cloud-reporter",
-  "version": "1.2.0.",
+  "version": "1.2.0",
   "description": "ZH Cloud, or zephyr helpers is a Node JS framework that implements test suites with Zephyr scale for Jira. It uses a soft-assert function to absorb failing assertions and translate them to a true/false value.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
