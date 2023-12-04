@@ -329,6 +329,27 @@ export const softAssert: SoftAssert = {
     }
     return assertPassed;
   },
+  matches(sample: any, pattern: any): boolean {
+    if (sample === undefined || pattern === undefined) {
+      console.log('ERROR [matches] please provide the sample and pattern arguments');
+      process.exit(1);
+    }
+    let assertPassed = false;
+    if (Array.isArray(sample) === true && Array.isArray(pattern) === true) {
+      console.log('ERROR [matches] Arrays are not supported');
+    }
+    else {
+      try {
+        expect(sample).match(pattern);
+        assertPassed = true;
+      }
+      catch (error) {
+        const e: any = error;
+        this.failedAsserts.push(e);
+      }
+    }
+    return assertPassed;
+  },
   notIncludes(sample: any, pattern: any): boolean {
     if (sample === undefined || pattern === undefined) {
       console.log(

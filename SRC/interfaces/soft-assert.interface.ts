@@ -13,4 +13,5 @@ export interface SoftAssert {
   hasLength: any;
   assertAll: any;
   isOneOf: any;
+  matches: any
 }
