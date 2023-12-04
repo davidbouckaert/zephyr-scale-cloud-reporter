@@ -320,7 +320,7 @@ export const softAssert: SoftAssert = {
       }
     } else {
       try {
-        expect(sample).deep.include(pattern);
+        expect(sample).include(pattern);
         assertPassed = true;
       } catch (error) {
         const e: any = error;
